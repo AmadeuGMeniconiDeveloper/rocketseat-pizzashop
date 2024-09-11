@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { Button } from "../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-label";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
