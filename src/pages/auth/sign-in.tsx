@@ -3,6 +3,7 @@ import { Button } from "../../components/ui/button";
 import { Label } from "@radix-ui/react-label";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
 
 const signInForm = z.object({
   email: z.string().email(),
@@ -19,7 +20,10 @@ export function SignIn() {
 
   async function handleSignIn(data: SignInForm) {
     console.log(data);
+
     await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    toast.success("A authentication link was sent to your email.");
   }
 
   return (
