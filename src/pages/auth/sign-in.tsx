@@ -4,6 +4,7 @@ import { Label } from "@radix-ui/react-label";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const signInForm = z.object({
   email: z.string().email(),
@@ -19,17 +20,40 @@ export function SignIn() {
   } = useForm<SignInForm>();
 
   async function handleSignIn(data: SignInForm) {
-    console.log(data);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    toast.success("A authentication link was sent to your email.");
+      toast.success(
+        <div className="flex w-full place-items-end justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <strong>Success</strong>
+            <p>A authentication link was sent to your email.</p>
+          </div>
+          <Button onClick={() => handleSignIn(data)} variant="outline">
+            Resend
+          </Button>
+        </div>,
+      );
+    } catch {
+      toast.error(
+        <div className="flex w-full flex-col gap-1">
+          <strong>Failure</strong>
+          <p>Something went wrong.</p>
+        </div>,
+      );
+    }
   }
 
   return (
     <>
       <Helmet title="Sign In" />
       <div className="p-8">
+        <Button asChild variant="outline" className="absolute right-8 top-8">
+          <Link to="/sign-up" className="">
+            Sign Up
+          </Link>
+        </Button>
+
         <div className="flex w-[350px] flex-col justify-center gap-6">
           <div className="mb-4 flex flex-col gap-1 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -47,15 +71,12 @@ export function SignIn() {
             <input
               id="email"
               type="email"
+              {...register("email")}
               className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:ring-primary"
             />
           </div>
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            {...register("email")}
-            className="w-full"
-          >
+
+          <Button type="submit" disabled={isSubmitting} className="w-full">
             Access panel
           </Button>
         </form>
