@@ -1,5 +1,15 @@
 import "./global.css";
 
+import { RouterProvider } from "react-router-dom";
+import { Helmet, HelmetProvider } from "react-helmet-async";
+
+import { routes } from "./routes";
+
 export function App() {
-  return <div className="flex h-screen bg-red-500"></div>;
+  return (
+    <HelmetProvider>
+      <Helmet titleTemplate="%s | pizza.shop" />
+      <RouterProvider router={routes} />
+    </HelmetProvider>
+  );
 }
