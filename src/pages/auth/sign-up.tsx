@@ -53,8 +53,7 @@ export function SignUp() {
           </Button>
         </div>,
       );
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error(
         <div className="flex w-full flex-col gap-1">
           <strong>Failure</strong>
