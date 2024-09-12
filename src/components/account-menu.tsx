@@ -9,16 +9,16 @@ import {
 } from "./ui/dropdown-menu";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
-import { getProfile } from "@/api/get-profile";
 import { getManagedRestaurant } from "@/api/get-managed-restaurant";
 import { Skeleton } from "./ui/skeleton";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import { StoreProfileDialog } from "./store-profile-dialog";
+import { ManagedRestaurantProfileDialog } from "./managed-restaurant-profile-dialog";
+import { getManagerProfile } from "@/api/get-manager-profile";
 
 export function AccountMenu() {
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
-    queryKey: ["profile"],
-    queryFn: getProfile,
+    queryKey: ["manager-profile"],
+    queryFn: getManagerProfile,
     staleTime: Infinity,
   });
 
@@ -75,7 +75,7 @@ export function AccountMenu() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <StoreProfileDialog />
+      <ManagedRestaurantProfileDialog />
     </Dialog>
   );
 }

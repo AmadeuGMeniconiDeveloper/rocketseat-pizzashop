@@ -10,22 +10,26 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { updateStoreProfile } from "@/api/update-store-profile";
 import { toast } from "sonner";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { updateManagedRestaurantProfile } from "@/api/update-managed-restaurant-profile";
 
-const storeProfileSchema = z.object({
+const managedRestaurantProfileSchema = z.object({
   name: z.string().min(1),
   description: z.string(),
 });
 
-type StoreProfileSchema = z.infer<typeof storeProfileSchema>;
+type ManagedRestaurantProfileSchema = z.infer<
+  typeof managedRestaurantProfileSchema
+>;
 
-export function StoreProfileDialog() {
+export function ManagedRestaurantProfileDialog() {
+  const queryClient = useQueryClient();
+
   const { data: managedRestaurant } = useQuery({
     queryKey: ["managed-restaurant"],
     queryFn: getManagedRestaurant,
@@ -36,21 +40,37 @@ export function StoreProfileDialog() {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<StoreProfileSchema>({
-    resolver: zodResolver(storeProfileSchema),
+  } = useForm<ManagedRestaurantProfileSchema>({
+    resolver: zodResolver(managedRestaurantProfileSchema),
     values: {
       name: managedRestaurant?.name ?? "",
       description: managedRestaurant?.description ?? "",
     },
   });
 
-  const { mutateAsync: updateStoreProfileFn } = useMutation({
-    mutationFn: updateStoreProfile,
+  const { mutateAsync: updateManagedRestaurantProfileFn } = useMutation({
+    mutationFn: updateManagedRestaurantProfile,
+    onSuccess(_, { name, description }) {
+      const cachedManagedRestaurant = queryClient.getQueryData([
+        "managed-restaurant",
+      ]);
+
+      console.log(cachedManagedRestaurant);
+      if (cachedManagedRestaurant) {
+        queryClient.setQueryData(["managed-restaurant"], {
+          ...cachedManagedRestaurant,
+          name,
+          description,
+        });
+      }
+    },
   });
 
-  async function handleUpdateStoreProfile(data: StoreProfileSchema) {
+  async function handleUpdateStoreProfile(
+    data: ManagedRestaurantProfileSchema,
+  ) {
     try {
-      await updateStoreProfileFn({
+      await updateManagedRestaurantProfileFn({
         name: data.name,
         description: data.description,
       });

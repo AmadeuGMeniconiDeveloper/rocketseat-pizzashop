@@ -5,7 +5,7 @@ interface UpdatetoreProfileBody {
   description: string | null;
 }
 
-export async function updateStoreProfile({
+export async function updateManagedRestaurantProfile({
   name,
   description,
 }: UpdatetoreProfileBody) {
