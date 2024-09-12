@@ -23,7 +23,7 @@ import { updateManagedRestaurantProfile } from "@/api/update-managed-restaurant-
 
 const managedRestaurantProfileSchema = z.object({
   name: z.string().min(1),
-  description: z.string(),
+  description: z.string().nullable(),
 });
 
 type ManagedRestaurantProfileSchema = z.infer<
@@ -51,23 +51,42 @@ export function ManagedRestaurantProfileDialog() {
     },
   });
 
+  function updateManagedRestaurantCache({
+    name,
+    description,
+  }: ManagedRestaurantProfileSchema) {
+    const cachedManagedRestaurant =
+      queryClient.getQueryData<GetManagedRestaurantResponse>([
+        "managed-restaurant",
+      ]);
+
+    if (cachedManagedRestaurant) {
+      queryClient.setQueryData<GetManagedRestaurantResponse>(
+        ["managed-restaurant"],
+        {
+          ...cachedManagedRestaurant,
+          name,
+          description,
+        },
+      );
+    }
+
+    return { cachedManagedRestaurant };
+  }
+
   const { mutateAsync: updateManagedRestaurantProfileFn } = useMutation({
     mutationFn: updateManagedRestaurantProfile,
-    onSuccess(_, { name, description }) {
-      const cachedManagedRestaurant =
-        queryClient.getQueryData<GetManagedRestaurantResponse>([
-          "managed-restaurant",
-        ]);
+    onMutate({ name, description }) {
+      const { cachedManagedRestaurant } = updateManagedRestaurantCache({
+        name,
+        description,
+      });
 
-      if (cachedManagedRestaurant) {
-        queryClient.setQueryData<GetManagedRestaurantResponse>(
-          ["managed-restaurant"],
-          {
-            ...cachedManagedRestaurant,
-            name,
-            description,
-          },
-        );
+      return { previousData: cachedManagedRestaurant };
+    },
+    onError(_error, _variables, context) {
+      if (context?.previousData) {
+        updateManagedRestaurantCache(context.previousData);
       }
     },
   });
