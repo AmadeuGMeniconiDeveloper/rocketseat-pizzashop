@@ -8,14 +8,18 @@ import {
   DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getManagedRestaurant } from "@/api/get-managed-restaurant";
 import { Skeleton } from "./ui/skeleton";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { ManagedRestaurantProfileDialog } from "./managed-restaurant-profile-dialog";
 import { getManagerProfile } from "@/api/get-manager-profile";
+import { signOut } from "@/api/sign-out";
+import { useNavigate } from "react-router-dom";
 
 export function AccountMenu() {
+  const navigate = useNavigate();
+
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["manager-profile"],
     queryFn: getManagerProfile,
@@ -28,6 +32,13 @@ export function AccountMenu() {
       queryFn: getManagedRestaurant,
       staleTime: Infinity,
     });
+
+  const { mutateAsync: signOutFn, isPending: isSigningOut } = useMutation({
+    mutationFn: signOut,
+    onSuccess: () => {
+      navigate("/sign-in", { replace: true });
+    },
+  });
 
   return (
     <Dialog>
@@ -68,9 +79,15 @@ export function AccountMenu() {
               <span>Store profile</span>
             </DropdownMenuItem>
           </DialogTrigger>
-          <DropdownMenuItem className="flex items-center gap-2 px-2 py-1 text-rose-500 hover:cursor-pointer dark:text-rose-400">
-            <LogOut className="h-4 w-4" />
-            <span>Logout</span>
+          <DropdownMenuItem
+            asChild
+            disabled={isSigningOut}
+            className="flex items-center gap-2 px-2 py-1 text-rose-500 hover:cursor-pointer dark:text-rose-400"
+          >
+            <button onClick={() => signOutFn()} className="w-full">
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

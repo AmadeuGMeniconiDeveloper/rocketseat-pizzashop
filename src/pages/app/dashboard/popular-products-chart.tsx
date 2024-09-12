@@ -31,7 +31,7 @@ export function PopularProductsChart() {
           <BarChart className="h-4 w-4 text-muted-foreground" />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex items-center justify-center">
         <ResponsiveContainer width="100%" height={240}>
           <PieChart>
             <Pie
@@ -46,6 +46,7 @@ export function PopularProductsChart() {
               label={({ name, amount }) =>
                 `${name.length > 12 ? name.substring(0, 12).concat("...") : name} (${amount})`
               }
+              fontSize={12}
               labelLine={false}
             >
               {data.map((_, index) => {
