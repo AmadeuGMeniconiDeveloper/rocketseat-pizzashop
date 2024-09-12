@@ -44,7 +44,7 @@ export function PopularProductsChart() {
               innerRadius={64}
               strokeWidth={4}
               label={({ name, amount }) =>
-                `${name.substring(0, 12).concat("...")} (${amount})`
+                `${name.length > 12 ? name.substring(0, 12).concat("...") : name} (${amount})`
               }
               labelLine={false}
             >
