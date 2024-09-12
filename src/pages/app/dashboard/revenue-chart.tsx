@@ -68,9 +68,9 @@ export function RevenueChart() {
             />
 
             <CartesianGrid
-              className="stroke-muted-foreground/40"
               vertical={false}
               strokeDasharray="3 10"
+              className="stroke-muted-foreground/40"
             />
           </LineChart>
         </ResponsiveContainer>

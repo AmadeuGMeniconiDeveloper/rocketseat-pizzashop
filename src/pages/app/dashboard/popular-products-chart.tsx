@@ -51,9 +51,9 @@ export function PopularProductsChart() {
               {data.map((_, index) => {
                 return (
                   <Cell
-                    className="stroke-background outline-none hover:opacity-60"
                     key={`cell-${index}`}
                     fill={CHART_COLORS[index]}
+                    className="stroke-background outline-none hover:opacity-60"
                   />
                 );
               })}
