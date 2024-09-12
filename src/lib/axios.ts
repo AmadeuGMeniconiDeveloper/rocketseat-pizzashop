@@ -8,7 +8,7 @@ export const api = axios.create({
 
 if (env.VITE_ENABLE_API_REQUEST_THROTTLE) {
   api.interceptors.request.use(async (config) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     return config;
   });

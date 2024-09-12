@@ -28,10 +28,13 @@ export function OrderStatus({ status }: OrderStatusProps) {
         <span className="h-2 w-2 rounded-full bg-rose-500" />
       )}
 
-      {status === "processing" ||
-        (status === "delivering" && (
-          <span className="h-2 w-2 rounded-full bg-amber-500" />
-        ))}
+      {status === "processing" && (
+        <span className="h-2 w-2 rounded-full bg-amber-500" />
+      )}
+
+      {status === "delivering" && (
+        <span className="h-2 w-2 rounded-full bg-amber-500" />
+      )}
 
       {status === "delivered" && (
         <span className="h-2 w-2 rounded-full bg-emerald-500" />

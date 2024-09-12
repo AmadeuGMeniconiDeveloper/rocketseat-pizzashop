@@ -10,11 +10,13 @@ export interface PaginationProps {
   pageIndex: number;
   totalCount: number;
   perPage: number;
+  onPageChange: (pageIndex: number) => Promise<void> | void;
 }
 export function Pagination({
   pageIndex,
   totalCount,
   perPage,
+  onPageChange,
 }: PaginationProps) {
   const pages = Math.ceil(totalCount / perPage) || 1;
 
@@ -29,19 +31,39 @@ export function Pagination({
           Page {pageIndex + 1} of {pages}
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="xs">
+          <Button
+            onClick={() => onPageChange(0)}
+            disabled={pageIndex === 0}
+            variant="outline"
+            size="xs"
+          >
             <ChevronsLeft className="h-4 w-4" />
             <span className="sr-only">First page</span>
           </Button>
-          <Button variant="outline" size="xs">
+          <Button
+            onClick={() => onPageChange(pageIndex - 1)}
+            disabled={pageIndex === 0}
+            variant="outline"
+            size="xs"
+          >
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Previous page</span>
           </Button>
-          <Button variant="outline" size="xs">
+          <Button
+            onClick={() => onPageChange(pageIndex + 1)}
+            disabled={pageIndex >= pages - 1}
+            variant="outline"
+            size="xs"
+          >
             <ChevronRight className="h-4 w-4" />
             <span className="sr-only">Next page</span>
           </Button>
-          <Button variant="outline" size="xs">
+          <Button
+            onClick={() => onPageChange(pages - 1)}
+            disabled={pageIndex >= pages - 1}
+            variant="outline"
+            size="xs"
+          >
             <ChevronsRight className="h-4 w-4" />
             <span className="sr-only">Last Page</span>
           </Button>
