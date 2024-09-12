@@ -3,8 +3,22 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ArrowRight, Search, X } from "lucide-react";
 import { OrderDetails } from "./order-details";
+import { OrderStatus } from "@/components/order-status";
 
-export function OrderTableRow() {
+import { formatDistanceToNow } from "date-fns";
+import { enUS } from "date-fns/locale";
+
+export interface OrderTableRowProps {
+  order: {
+    orderId: string;
+    createdAt: string;
+    status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
+    customerName: string;
+    total: number;
+  };
+}
+
+export function OrderTableRow({ order }: OrderTableRowProps) {
   return (
     <TableRow>
       <TableCell>
@@ -20,21 +34,28 @@ export function OrderTableRow() {
       </TableCell>
 
       <TableCell className="font-mono text-xs font-medium">
-        fkjFSKfGF76fusyf8s
+        {order.orderId}
       </TableCell>
 
-      <TableCell className="text-muted-foreground">15 mins ago</TableCell>
+      <TableCell className="text-muted-foreground">
+        {formatDistanceToNow(order.createdAt, {
+          locale: enUS,
+          addSuffix: true,
+        })}
+      </TableCell>
 
       <TableCell>
-        <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-red-500" />
-          <span className="font-medium text-muted-foreground">Pending</span>
-        </div>
+        <OrderStatus status={order.status} />
       </TableCell>
 
-      <TableCell className="font-medium">Client Name</TableCell>
+      <TableCell className="font-medium">{order.customerName}</TableCell>
 
-      <TableCell className="text-right font-medium">$ 45.00</TableCell>
+      <TableCell className="text-right font-medium">
+        {order.total.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        })}
+      </TableCell>
 
       <TableCell className="text-right">
         <Button variant="outline" size="xs">
