@@ -14,7 +14,7 @@ import { getManagedRestaurant } from "@/api/get-managed-restaurant";
 import { Skeleton } from "./ui/skeleton";
 
 export function AccountMenu() {
-  const { data: profile } = useQuery({
+  const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile"],
     queryFn: getProfile,
   });
@@ -42,10 +42,19 @@ export function AccountMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex flex-col">
-          <span>{profile ? profile.name : "..."}</span>
-          <span className="text-sm font-normal text-muted-foreground">
-            {profile ? profile.email : "..."}
-          </span>
+          {isLoadingProfile ? (
+            <div className="space-y-1">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-3 w-24" />
+            </div>
+          ) : (
+            <>
+              <span>{profile ? profile.name : "..."}</span>
+              <span className="text-sm font-normal text-muted-foreground">
+                {profile ? profile.email : "..."}
+              </span>
+            </>
+          )}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="flex items-center gap-2 px-2 py-1">
