@@ -1,4 +1,7 @@
-import { getManagedRestaurant } from "@/api/get-managed-restaurant";
+import {
+  getManagedRestaurant,
+  GetManagedRestaurantResponse,
+} from "@/api/get-managed-restaurant";
 import { Button } from "./ui/button";
 import {
   DialogContent,
@@ -51,17 +54,20 @@ export function ManagedRestaurantProfileDialog() {
   const { mutateAsync: updateManagedRestaurantProfileFn } = useMutation({
     mutationFn: updateManagedRestaurantProfile,
     onSuccess(_, { name, description }) {
-      const cachedManagedRestaurant = queryClient.getQueryData([
-        "managed-restaurant",
-      ]);
+      const cachedManagedRestaurant =
+        queryClient.getQueryData<GetManagedRestaurantResponse>([
+          "managed-restaurant",
+        ]);
 
-      console.log(cachedManagedRestaurant);
       if (cachedManagedRestaurant) {
-        queryClient.setQueryData(["managed-restaurant"], {
-          ...cachedManagedRestaurant,
-          name,
-          description,
-        });
+        queryClient.setQueryData<GetManagedRestaurantResponse>(
+          ["managed-restaurant"],
+          {
+            ...cachedManagedRestaurant,
+            name,
+            description,
+          },
+        );
       }
     },
   });
