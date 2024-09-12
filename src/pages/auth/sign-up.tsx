@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { registerRestaurant } from "@/api/register-restaurant";
 
 const signUpForm = z.object({
   restaurantName: z.string(),
@@ -22,11 +24,20 @@ export function SignUp() {
     formState: { isSubmitting },
   } = useForm<SignUpForm>();
 
+  const { mutateAsync: regiterRestaurantFn } = useMutation({
+    mutationFn: registerRestaurant,
+  });
+
   const navigate = useNavigate();
 
   async function handleSignUp(data: SignUpForm) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await regiterRestaurantFn({
+        restaurantName: data.restaurantName,
+        managerName: data.managerName,
+        email: data.email,
+        phone: data.phone,
+      });
 
       toast.success(
         <div className="flex w-full place-items-end justify-between gap-4">
@@ -34,12 +45,16 @@ export function SignUp() {
             <strong>Success</strong>
             <p>Restaurant was registered successfully.</p>
           </div>
-          <Button onClick={() => navigate("/sign-in")} variant="outline">
+          <Button
+            onClick={() => navigate(`/sign-in?email=${data.email}`)}
+            variant="outline"
+          >
             Sign in
           </Button>
         </div>,
       );
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast.error(
         <div className="flex w-full flex-col gap-1">
           <strong>Failure</strong>
