@@ -141,7 +141,7 @@ export function ManagedRestaurantProfileDialog() {
             <Textarea
               id="description"
               {...register("description")}
-              className="col-span-3"
+              className="col-span-3 max-h-96 min-h-28"
             />
           </div>
         </div>

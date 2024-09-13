@@ -12,13 +12,13 @@ import { queryClient } from "./lib/react-query";
 export function App() {
   return (
     <ThemeProvider storageKey="pizzashop-theme" defaultTheme="system">
-      <HelmetProvider>
-        <Helmet titleTemplate="%s | pizza.shop" />
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <Helmet titleTemplate="%s | pizza.shop" />
           <Toaster richColors />
           <RouterProvider router={routes} />
-        </QueryClientProvider>
-      </HelmetProvider>
+        </HelmetProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
