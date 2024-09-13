@@ -70,7 +70,7 @@ export function OrderTableFilters() {
       state.delete("orderId");
       state.delete("customerName");
       state.delete("status");
-      state.delete("pageIndex", "1");
+      state.set("pageIndex", "1");
 
       return state;
     });
