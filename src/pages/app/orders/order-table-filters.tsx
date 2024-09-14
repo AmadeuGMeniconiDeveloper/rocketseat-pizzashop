@@ -129,6 +129,11 @@ export function OrderTableFilters() {
         }}
       />
 
+      <Button type="submit" variant="default" size="xs">
+        <Search className="mr-2 h-3 w-3" />
+        <span>Search results</span>
+      </Button>
+
       <Button
         onClick={handleClearFilters}
         type="button"
@@ -137,10 +142,6 @@ export function OrderTableFilters() {
       >
         <X className="mr-2 h-3 w-3" />
         <span>Clear filters</span>
-      </Button>
-      <Button type="submit" variant="default" size="xs">
-        <Search className="mr-2 h-3 w-3" />
-        <span>Search results</span>
       </Button>
     </form>
   );
