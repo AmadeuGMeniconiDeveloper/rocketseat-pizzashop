@@ -18,6 +18,7 @@ import { getOrderDetails } from "@/api/get-order-details";
 import { OrderStatus } from "@/components/order-status";
 import { formatDistanceToNow } from "date-fns";
 import { enUS } from "date-fns/locale";
+import { OrderDetailsSkeleton } from "./order-details-skeleton";
 
 export interface OrderDetailsProps {
   orderId: string;
@@ -31,31 +32,27 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
     enabled: open,
   });
 
-  if (!order) {
-    return null;
-  }
-
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Order: {orderId}</DialogTitle>
-        <DialogDescription>{order?.createdAt}</DialogDescription>
+        <DialogDescription>Oder details</DialogDescription>
       </DialogHeader>
 
-      {order && (
-        <div className="space-y-2">
+      {order ? (
+        <div className="space-y-6">
           <Table>
             <TableBody>
               <TableRow>
                 <TableCell className="text-muted-foreground">Status</TableCell>
-                <TableCell className="flex-justify-end">
+                <TableCell className="flex justify-end">
                   <OrderStatus status={order.status} />
                 </TableCell>
               </TableRow>
 
               <TableRow>
                 <TableCell className="text-muted-foreground">Client</TableCell>
-                <TableCell className="flex-justify-end">
+                <TableCell className="flex justify-end">
                   <span className="font-medium text-muted-foreground">
                     {order.customer.name}
                   </span>
@@ -64,7 +61,7 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
 
               <TableRow>
                 <TableCell className="text-muted-foreground">Phone</TableCell>
-                <TableCell className="flex-justify-end">
+                <TableCell className="flex justify-end">
                   <span className="font-medium text-muted-foreground">
                     {order.customer.phone ?? "Not provided"}
                   </span>
@@ -73,7 +70,7 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
 
               <TableRow>
                 <TableCell className="text-muted-foreground">E-mail</TableCell>
-                <TableCell className="flex-justify-end">
+                <TableCell className="flex justify-end">
                   <span className="font-medium text-muted-foreground">
                     {order.customer.email}
                   </span>
@@ -82,7 +79,7 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
 
               <TableRow>
                 <TableCell className="text-muted-foreground">Date</TableCell>
-                <TableCell className="flex-justify-end">
+                <TableCell className="flex justify-end">
                   <span className="font-medium text-muted-foreground">
                     {formatDistanceToNow(order.createdAt!, {
                       locale: enUS,
@@ -137,6 +134,8 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
             </TableFooter>
           </Table>
         </div>
+      ) : (
+        <OrderDetailsSkeleton />
       )}
     </DialogContent>
   );

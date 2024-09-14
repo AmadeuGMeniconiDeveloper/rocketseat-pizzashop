@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getOrders } from "@/api/get-orders";
 import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
+import { OrderTableSkeleton } from "./order-table-skeleton";
 
 export function Orders() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,7 +27,7 @@ export function Orders() {
     .transform((page) => page - 1)
     .parse(searchParams.get("pageIndex") ?? "1");
 
-  const { data: response } = useQuery({
+  const { data: result, isLoading: isOrdersLoading } = useQuery({
     queryKey: ["orders", pageIndex, orderId, customerName, status],
     queryFn: () =>
       getOrders({
@@ -65,25 +66,27 @@ export function Orders() {
                   <TableHead className="w-[140px] text-right">
                     Order Total
                   </TableHead>
-                  <TableHead className="w-[164px]"></TableHead>
-                  <TableHead className="w-[132px]"></TableHead>
+                  <TableHead className="w-[164px] text-right"></TableHead>
+                  <TableHead className="w-[132px] text-right"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {response &&
-                  response.orders.map((order) => (
+                {isOrdersLoading && <OrderTableSkeleton />}
+
+                {result &&
+                  result.orders.map((order) => (
                     <OrderTableRow key={order.orderId} order={order} />
                   ))}
               </TableBody>
             </Table>
           </div>
 
-          {response && (
+          {result && (
             <Pagination
               onPageChange={handlePageChange}
-              pageIndex={response.meta.pageIndex}
-              totalCount={response.meta.totalCount}
-              perPage={response.meta.perPage}
+              pageIndex={result.meta.pageIndex}
+              totalCount={result.meta.totalCount}
+              perPage={result.meta.perPage}
             />
           )}
         </div>
