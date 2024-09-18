@@ -65,7 +65,7 @@ export function Pagination({
             size="xs"
           >
             <ChevronsRight className="h-4 w-4" />
-            <span className="sr-only">Last Page</span>
+            <span className="sr-only">Last page</span>
           </Button>
         </div>
       </div>
